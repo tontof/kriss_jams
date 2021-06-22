@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+      <title>KrISS jams</title>
+      <link href="style.css" rel="stylesheet">
+  </head>
+  <body>
+    <header><a href="//tontof.net/jams/">KrISS jams</a> - A simple and smart (or stupid) jams label generator. By <a href="//tontof.net">Tontof</a> (images from <a href="https://www.shutterstock.com/fr/g/Daria+Ustiugova">Daria Ustiugova</a>)</header>
+    <div id="config">
+      <div id="demo" class="label" contenteditable>
+        <div>
+          <div>
+            <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=" alt="Jam flavour">
+            <p class="date"></p>
+          </div>
+          <p class="flavour"></p>
+        </div>
+      </div>
+      <select id="jams"></select><br>
+      <label>Number of labels: </label><input type="number" id="cols" value="2" min="1"> X <input type="number" id="rows" value="5" min="1"><br>
+      <label>Image: <input type="text" id="img" value=""></label><br>
+      <label>Font: <input type="text" id="font-family" value="font/dancing_script.woff"></label><br>
+      <label>Flavour font size: <input type="number" id="font-size-flavour" value="42"></label><br>
+      <label>Date font size: <input type="number" id="font-size-date" value="24"></label><br>
+      <label>Space between labels: <input type="range" id="gap" min="0" max="84" value="24"></label><br>
+      <label>Page margins: <input type="range" id="padding" min="0" max="84" value="24"></label><br>
+      <label>Label border: <input type="checkbox" id="border" checked="checked"></label><br>
+      <label>Border radius: <input type="range" id="border-radius" min="0" max="50" value="24"></label><br>
+      <button id="print">Print</button><br>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
