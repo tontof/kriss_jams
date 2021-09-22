@@ -3,32 +3,57 @@
   <head>
     <meta charset="utf-8">
       <title>KrISS jams</title>
-      <link href="style.css" rel="stylesheet">
+      <link href="inc/style.css" rel="stylesheet">
   </head>
   <body>
     <header><a href="//tontof.net/jams/">KrISS jams</a> - A simple and smart (or stupid) jams label generator. By <a href="//tontof.net">Tontof</a> (images from <a href="https://www.shutterstock.com/fr/g/Daria+Ustiugova">Daria Ustiugova</a>)</header>
     <div id="config">
-      <div id="demo" class="label" contenteditable>
-        <div>
-          <div>
-            <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=" alt="Jam flavour">
-            <p class="date"></p>
-          </div>
-          <p class="flavour"></p>
-        </div>
-      </div>
+      <div id="demo" class="label">
+        <div></div>
+      </div> 
       <select id="jams"></select><br>
-      <label>Number of labels: </label><input type="number" id="cols" value="2" min="1"> X <input type="number" id="rows" value="5" min="1"><br>
-      <label>Image: <input type="text" id="img" value=""></label><br>
-      <label>Font: <input type="text" id="font-family" value="font/dancing_script.woff"></label><br>
-      <label>Flavour font size: <input type="number" id="font-size-flavour" value="42"></label><br>
-      <label>Date font size: <input type="number" id="font-size-date" value="24"></label><br>
-      <label>Space between labels: <input type="range" id="gap" min="0" max="84" value="24"></label><br>
-      <label>Page margins: <input type="range" id="padding" min="0" max="84" value="24"></label><br>
-      <label>Label border: <input type="checkbox" id="border" checked="checked"></label><br>
-      <label>Border radius: <input type="range" id="border-radius" min="0" max="50" value="24"></label><br>
-      <button id="print">Print</button><br>
+      <details>
+        <summary>Edit list:</summary>
+        <button id="add-to-list">+ Add current label to list</button>
+        <button id="remove-from-list">- Remove selected from list</button><br>
+        <button id="move-down-list">↓ Move down current label to list</button>
+        <button id="move-up-list">↑ Move up current label to list</button>
+      </details>
+      <details>
+        <summary>Edit template:</summary>
+        <label>Template item name: <input type="text" id="item-name" value=""></label>
+        <button id="add-img">Add image</button>
+        <button id="add-text">Add text</button>
+        <button id="add-date">Add date</button><br>
+        <label>Edit: <select id="edit"><option value=""></option></select></label>
+        <label>Move: <select id="move"><option value=""></option></select></label>
+        <label>Delete: <select id="delete"><option value=""></option></select></label>
+        <label>Image auto resize: <input type="checkbox" id="img-autoresize"></label>
+        <div id="editor" style="display: none;">
+          <label>Image: <input type="text" id="img" value=""></label>
+          <label>Image selection: <select id="img-selection"></select></label>
+          <label>Font family: <input type="text" id="font-family" value="Dancing Script"></label>
+          <label>Font selection: <select id="font-selection"></select></label>
+          <label>Font size: <input type="number" id="font-size"></label>
+          <label>Font color: <input type="color" id="color"></label>
+          <label>Height auto: <input type="checkbox" id="height-auto"></label>
+          <label>Height: <input type="range" id="height" min="0" max="100"></label>
+          <label>Width auto: <input type="checkbox" id="width-auto"></label>
+          <label>Width: <input type="range" id="width" min="0" max="100"></label>
+        </div>
+      </details>
+      <details>
+        <summary>Edit labels:</summary>
+        Number of labels: <input type="number" id="cols" value="2" min="1"> X <input type="number" id="rows" value="5" min="1">
+        <label>Space between labels: <input type="range" id="gap" min="0" max="84" value="24"></label>
+        <label>Page margins: <input type="range" id="padding" min="0" max="84" value="24"></label>
+        <label>Label border: <input type="checkbox" id="border" checked="checked"></label>
+        <label>Border radius: <input type="range" id="border-radius" min="0" max="50" value="24"></label>
+      </details>
+      <button id="print">Print</button>
+      <a id="share" href="">Share</a>
+      <button id="clear" data-confirm="Are you sure?">Clear All</button>
     </div>
-    <script src="script.js"></script>
+    <script src="inc/script.js"></script>
   </body>
 </html>
