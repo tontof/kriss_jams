@@ -48,6 +48,15 @@ var jams_list = [
     }
   },
   {
+    'img': 'inc/img/coings.png',
+    'flavour': {
+      "data": "Confiture de Coings",
+      "style": {
+        "color": "#ffcc00"
+      }
+    }
+  },
+  {
     'img': 'inc/img/cerises.png',
     'flavour': {
       "data" : "Confiture de Cerises",
@@ -116,6 +125,15 @@ var jams_list = [
       "data": "Gelée de Cassis",
       "style": {
         "color": "#000033"
+      }
+    }
+  },
+  {
+    'img': 'inc/img/coings.png',
+    'flavour': {
+      "data": "Gelée de Coings",
+      "style": {
+        "color": "#ffcc00"
       }
     }
   },
