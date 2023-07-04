@@ -1,5 +1,6 @@
 var page = document.createElement('page');
 page.setAttribute('size', 'A4');
+page.setAttribute('num', '1');
 document.body.appendChild(page);
 var style = document.createElement('style');
 document.head.appendChild(style);
@@ -52,7 +53,7 @@ var jams_list = [
     'flavour': {
       "data": "Confiture de Coings",
       "style": {
-        "color": "#ffcc00"
+        "color": "#e5a50a"
       }
     }
   },
@@ -80,6 +81,15 @@ var jams_list = [
       "data": "Confiture Fraises Rhubarbe",
       "style": {
         "color": "#ff3333"
+      }
+    }
+  },
+  {
+    'img': 'inc/img/framboises.png',
+    'flavour': {
+      "data": "Confiture de Framboises",
+      "style": {
+        "color": "#cc0000"
       }
     }
   },
@@ -129,11 +139,20 @@ var jams_list = [
     }
   },
   {
+    'img': 'inc/img/cassis_groseilles.png',
+    'flavour': {
+      "data": "Gelée de Cassis Groseilles",
+      "style": {
+        "color": "#000033"
+      }
+    }
+  },
+  {
     'img': 'inc/img/coings.png',
     'flavour': {
       "data": "Gelée de Coings",
       "style": {
-        "color": "#ffcc00"
+        "color": "#e5a50a"
       }
     }
   },
@@ -213,6 +232,7 @@ document.getElementById('cols').oninput = generatePage;
 document.getElementById('add-img').onclick = (evt) => { addImg(getName('img'), '', true); };
 document.getElementById('add-text').onclick = (evt) => { addText(getName('text')); };
 document.getElementById('add-date').onclick = (evt) => { addDate(getName('date')); };
+document.getElementById('add-num').onclick = (evt) => { addNum(getName('num')); };
 document.getElementById('add-to-list').onclick = (evt) => { addToList(); };
 document.getElementById('remove-from-list').onclick = (evt) => { removeFromList(); };
 document.getElementById('move-down-list').onclick = (evt) => { moveDownList(); };
@@ -221,6 +241,7 @@ document.getElementById('edit').oninput = (evt) => { editElt(evt.target.value); 
 document.getElementById('move').oninput = (evt) => { moveElt(evt.target.value); };
 document.getElementById('delete').oninput = (evt) => { deleteElt(evt.target.value); };
 document.getElementById('print').onclick = (evt) => { window.print(); };
+document.getElementById('print-pages').onclick = (evt) => { pages = prompt('pages?'); for(var i = 2; i<=pages; i++) { var current = page.cloneNode(true); current.setAttribute('num', i); document.body.appendChild(current); }; window.print(); };
 document.getElementById('clear').onclick = (evt) => { if (confirm(evt.target.getAttribute('data-confirm'))) { window.location.href = '#'; window.location.reload(); }};
 document.getElementById('img-selection').oninput = (evt) => {
   document.getElementById('img').value = evt.target.value;
@@ -477,13 +498,28 @@ function loadData(data) {
   generatePage();
 }
 
+// https://developer.mozilla.org/en-US/docs/Web/API/btoa
+function toBinary(string) {
+  const codeUnits = Uint16Array.from(
+    { length: string.length },
+    (element, index) => string.charCodeAt(index)
+  );
+  const charCodes = new Uint8Array(codeUnits.buffer);
+
+  let result = "";
+  charCodes.forEach((char) => {
+    result += String.fromCharCode(char);
+  });
+  return result;
+}
+
 function getHash() {
-  return btoa(JSON.stringify({
+  return btoa(toBinary(JSON.stringify({
     'template': getTemplate(),
     'list': getList(),
     'data': getData(),
     'options': getOptions()
-  }));
+  })));
 }
 
 function toString(data) {
@@ -510,12 +546,26 @@ function loadList(l) {
   });
 }
 
+// https://developer.mozilla.org/en-US/docs/Web/API/btoa
+function fromBinary(binary) {
+  const bytes = Uint8Array.from({ length: binary.length }, (element, index) =>
+    binary.charCodeAt(index)
+  );
+  const charCodes = new Uint16Array(bytes.buffer);
+
+  let result = "";
+  charCodes.forEach((char) => {
+    result += String.fromCharCode(char);
+  });
+  return result;
+}
+
 function loadHash() {
   if (window.location.href.indexOf('#') !== -1) {
     var hash = window.location.hash.substring(1);
     if (hash) {
       template = {};
-      hash = JSON.parse(atob(hash));
+      hash = JSON.parse(fromBinary(atob(hash)));
       if ('options' in hash) {
         loadOptions(hash.options);
       }
@@ -551,9 +601,9 @@ function addToForm(key) {
   document.querySelector('#delete').options.add(new Option(key, key));
 }
 
-function createElt(name) {
+function createElt(name, type) {
   var elt = document.createElement('p');
-  elt.className = name;
+  elt.className = name+' '+type;
   elt.setAttribute('data-style', '{}');
   return elt;
 }
@@ -580,7 +630,7 @@ function resizeImg(evt) {
 }
 
 function addImg(name, src = "", center = false) {
-  var elt = createElt(name);
+    var elt = createElt(name, 'img');
   var img = document.createElement('img');
   if (center) img.setAttribute('center', true);
   elt.appendChild(img);
@@ -607,26 +657,35 @@ function addDate(name) {
   };
   return addText(name, (new Date()).getFullYear());
 }
+
+function addNum(name) {
+  template[name] = {
+      'type': 'num'
+  };
+  return addText(name, "");
+}
+
 function addText(name, text = "Text") {
-  var elt = createElt(name);
-  elt.className = name;
-  elt.appendChild(document.createTextNode(text));
-  document.querySelector('#demo > div').appendChild(elt);
-  addToForm(name);
   if (!(name in template)) {
     template[name] = {
       'type': 'text'
     };
   }
+
+  var elt = createElt(name, template[name]['type']);
+  elt.appendChild(document.createTextNode(text));
+  document.querySelector('#demo > div').appendChild(elt);
+  addToForm(name);
   generatePage();
   return elt;  
 }
 
 function loadElementStyle(ratio = 1) {
+  var num = [];
   var output_style = "";
   document.querySelectorAll('#demo > div > p').forEach(elt => {
     var element_style = JSON.parse(elt.getAttribute('data-style'));
-    output_style += '.label > div > p.'+elt.className+' {'+"\n";
+    output_style += '.label > div > p.'+elt.className.split(' ')[0]+' {'+"\n";
     Object.keys(element_style).forEach(key => {
       if (element_style[key].endsWith('px') || element_style[key].endsWith('rem')) {
         output_style += '  '+key+': calc('+element_style[key]+' * '+ratio+');'+"\n";
@@ -635,7 +694,18 @@ function loadElementStyle(ratio = 1) {
       }
     });
     output_style += '}'+"\n";
+    if (elt.classList.contains('num')) {
+      num.push(elt.className.split(' ')[0]);
+      output_style += '.label > div > p.'+elt.className.split(' ')[0]+'::before {'+"\n";
+      output_style += '  content: counter('+elt.className.split(' ')[0]+');'+"\n";
+      output_style += '}'+"\n";
+      output_style += '.label > div > p.'+elt.className.split(' ')[0]+' {'+"\n";
+      output_style += '  counter-increment: '+elt.className.split(' ')[0]+' 1;'+"\n";
+      output_style += '}'+"\n";
+    }
   });
+  output_style += 'body {counter-reset: '+num.join(' ')+' 0;}'+"\n";
+  output_style += 'page[num="1"] {counter-reset: '+num.join(' ')+' 0;}'+"\n";
 
   return output_style;
 }
@@ -833,7 +903,7 @@ function getOptions() {
     'rows': document.getElementById('rows').value,
     'cols': document.getElementById('cols').value,
     'gap': document.getElementById('gap').value,
-    'margin': document.getElementById('padding').value,
+    'padding': document.getElementById('padding').value,
     'border': document.getElementById('border').checked,
     'border-radius': document.getElementById('border-radius').value
   };
@@ -849,11 +919,14 @@ function loadOptions(opts) {
   if ('gap' in opts) {
     document.getElementById('gap').value = opts['gap'];
   }
+  if ('padding' in opts) {
+    document.getElementById('padding').value = opts['padding'];
+  }
   if ('border' in opts) {
     document.getElementById('border').checked = !!opts['border'];
   }
   if ('border-radius' in opts) {
-    document.getElementById('border-radius').value = opts['border-radiusx'];
+    document.getElementById('border-radius').value = opts['border-radius'];
   }
 }
 
@@ -871,6 +944,9 @@ function loadTemplate(tpl) {
         break;
       case 'text':
         elt = addText(key);
+        break;
+      case 'num':
+        elt = addNum(key);
         break;
     }
     elt.setAttribute('data-style', JSON.stringify(tpl[key]['style']));
