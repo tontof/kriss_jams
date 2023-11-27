@@ -130,6 +130,15 @@ var jams_list = [
     }
   },
   {
+    'img': 'inc/img/chataignes.png',
+    'flavour': {
+      "data": "Crème de marrons",
+      "style": {
+        "color": "#996633"
+      }
+    }
+  },
+  {
     'img': 'inc/img/cassis.png',
     'flavour': {
       "data": "Gelée de Cassis",
